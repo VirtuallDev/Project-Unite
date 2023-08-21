@@ -7,8 +7,12 @@ generator client {
     provider = "prisma-client-js"
 }
 model User {
-    id       Int    @id
-    email    String @unique
-    username String @unique
-    password String
+    id                 String    @id @unique
+    email              String    @unique
+    username           String    @unique
+    createdAt          DateTime?
+    hashSalt           String?
+    password           String
+    refreshToken       String?
+    refreshTokenIssued DateTime?
 }

@@ -1,4 +1,10 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
 
 @Controller('auth')
-export class AuthController {}
+export class AuthController {
+
+    @Get("/")
+    authMain() {
+        throw new HttpException("Error", HttpStatus.NOT_FOUND, {description: JSON.stringify({"a": 1})});
+    }
+}
