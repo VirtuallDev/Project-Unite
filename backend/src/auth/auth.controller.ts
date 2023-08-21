@@ -1,9 +1,7 @@
-import { Controller, Get, Post, Body, HttpException, HttpStatus, Req, Res, UseInterceptors, ClassSerializerInterceptor, UseFilters, HttpCode } from '@nestjs/common';
-import { Response, Request } from 'express';
+import { Controller, Get, Post, Body, HttpStatus, Req, Res, UseInterceptors, ClassSerializerInterceptor, UseFilters, HttpCode } from '@nestjs/common';
 import { RegisterDto } from './auth.dto';
-import { plainToClass } from 'class-transformer';
 import { AuthService } from './auth.service';
-import { UniteExceptionFilter } from 'exceptions/UniteException.filter';
+import { UniteExceptionFilter } from 'src/exceptions/UniteException.filter';
 import { HttpSuccess } from 'src/utils/http.success';
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -13,6 +11,7 @@ export class AuthController {
 
     constructor(private readonly authService: AuthService) {}
 
+    // TODO: ReCaptch when frontend is completed
     @HttpCode(200)
     @Post("/register")
     async register(@Body() regData: RegisterDto) {

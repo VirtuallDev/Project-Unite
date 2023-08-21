@@ -1,5 +1,5 @@
 import { HttpStatus, NotAcceptableException } from "@nestjs/common";
-import UniteException from "exceptions/UniteException";
+import UniteException from "src/exceptions/UniteException";
 
 
 export class CredentialExistsException extends UniteException {

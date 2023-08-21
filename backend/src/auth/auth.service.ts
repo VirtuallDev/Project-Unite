@@ -4,7 +4,7 @@ import { RegisterDto } from './auth.dto';
 import { Prisma } from '@prisma/client';
 import { PrismaError } from 'src/utils/prisma.errors';
 import { CredentialExistsException } from 'src/users/users.exceptions';
-import UniteException from 'exceptions/UniteException';
+import UniteException from 'src/exceptions/UniteException';
 
 
 @Injectable()
