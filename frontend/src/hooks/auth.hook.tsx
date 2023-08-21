@@ -12,7 +12,7 @@ export type BODY = JsonObject | File;
 
 
 
-type ApiFunction = (endpoint: string | "", method?: HTTP_METHOD, body?: BODY) => Promise<JsonObject | unknown>;
+export type ApiFunction = (endpoint: string | "", method?: HTTP_METHOD, body?: BODY) => Promise<unknown>;
 
 function useAuth() {
     const dispatch = useDispatch<AppDispatch>();
@@ -70,7 +70,7 @@ function useAuth() {
     }
 
     
-    async function useApi(endpoint: string, method: HTTP_METHOD, body: BODY) {
+    async function useApi(endpoint: string, method?: HTTP_METHOD, body?: BODY) {
         try {
             if(isTokenExpired()) await getNewAccessToken();
             const jsonRes = await apiRef.current(endpoint, method, body);
@@ -80,7 +80,7 @@ function useAuth() {
         }
     }
 
-    return useApi;
+    return { useApi };
 }
 
 export default useAuth;
