@@ -1,19 +1,23 @@
+import { createHmac } from 'crypto';
+import * as bcrypt from 'bcrypt';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { User, Prisma } from '@prisma/client';
 import { UserDto } from './users.dto';
-import crypto from 'crypto';
 import { CredentialExistsException } from './users.exceptions';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly configService: ConfigService) {}
 
     async createUser(userDto: UserDto) {
         const id = this.generateNonce();
         const { email, password, username } = userDto;
-        const passwordSalt = this.generateSalt();
-        const passHash = crypto.createHmac('sha256', passwordSalt).update(password).digest('hex');
+        const passwordSalt = await this.generateSalt();
+        const passHash = createHmac('sha256', passwordSalt).update(password).digest('hex');
 
         await this.prisma.user.create({
             data: {
@@ -21,19 +25,22 @@ export class UsersService {
                 username,
                 email,
                 password: passHash,
-                hashSalt: passHash,
+                hashSalt: passwordSalt,
                 createdAt: new Date()
             }
         })
 
+
     }   
 
     generateNonce() {
-        return Date.now().toString() + crypto.randomBytes(3).toString("hex");
+        return Date.now().toString();
     }
 
-    generateSalt() {
-        return crypto.randomBytes(16).toString("hex");
+    async generateSalt() {
+        
+        const salt = await bcrypt.genSalt(16);
+        return salt;
     }
 
 }

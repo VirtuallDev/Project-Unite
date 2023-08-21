@@ -1,10 +1,10 @@
 model User {
-    id                 String    @id @unique
-    email              String    @unique
-    username           String    @unique
-    createdAt          DateTime?
-    hashSalt           String?
-    password           String
-    refreshToken       String?
-    refreshTokenIssued DateTime?
+    id           String    @id @unique
+    email        String    @unique
+    username     String    @unique
+    createdAt    DateTime?
+    hashSalt     String?
+    password     String
+    refreshToken String?
+    issuedAt     DateTime?
 }

@@ -3,6 +3,7 @@ import { UsersService } from 'src/users/users.service';
 import { RegisterDto } from './auth.dto';
 import { Prisma } from '@prisma/client';
 import { PrismaError } from 'src/utils/prisma.errors';
+import { CredentialExistsException } from 'src/users/users.exceptions';
 
 
 @Injectable()
@@ -17,9 +18,14 @@ export class AuthService {
             if(error instanceof Prisma.PrismaClientKnownRequestError &&
                 error?.code === PrismaError.UniqueConstraintFailed)
             {
-                // throw new HttpException("")
+                throw new CredentialExistsException();
             }
+            throw new HttpException(
+                'Something went wrong',
+                HttpStatus.INTERNAL_SERVER_ERROR,
+              );
         }
     }
 
 }
+                    
