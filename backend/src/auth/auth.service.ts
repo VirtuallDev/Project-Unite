@@ -4,6 +4,7 @@ import { RegisterDto } from './auth.dto';
 import { Prisma } from '@prisma/client';
 import { PrismaError } from 'src/utils/prisma.errors';
 import { CredentialExistsException } from 'src/users/users.exceptions';
+import UniteException from 'exceptions/UniteException';
 
 
 @Injectable()
@@ -20,8 +21,8 @@ export class AuthService {
             {
                 throw new CredentialExistsException();
             }
-            throw new HttpException(
-                'Something went wrong',
+            throw new UniteException(
+                'Something went wrong, please contact our tech support.',
                 HttpStatus.INTERNAL_SERVER_ERROR,
               );
         }
