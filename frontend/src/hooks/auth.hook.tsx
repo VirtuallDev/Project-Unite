@@ -5,7 +5,7 @@ import jwtDecode from 'jwt-decode';
 import { setAccessToken } from '../redux/reducers/accesstoken.reducer';
 
 type JsonObject = Record<string, unknown>;
-export const API_URL = "localhost:3000";
+export const API_URL = "http://localhost:3000";
 export type HTTP_METHOD = "GET" | "POST" | "PUT" | "DELETE" | "UPDATE";
 
 export type BODY = JsonObject | File;
