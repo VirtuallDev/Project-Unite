@@ -45,5 +45,20 @@ export class AuthService {
             throw err;
         }
     }
+
+    public async logout(refToken: string, userId: string) {
+        try {
+            await this.usersService.logout(refToken, userId);
+        } catch(err) {
+            if(!(err instanceof UniteException)) {
+                throw new UniteException(
+                    'Something went wrong, please contact our tech support.',
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                  );
+            }
+
+            throw err;
+        }
+    }
 }
                     

@@ -4,7 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { LoginDto, UserDto } from './users.dto';
 import { ConfigService } from '@nestjs/config';
 import Generator from 'src/utils/generators';
-import UniteException from 'src/exceptions/UniteException';
+import { CredentialNotFoundException, UserNotFoundException } from './users.exceptions';
 
 @Injectable()
 export class UsersService {
@@ -31,14 +31,14 @@ export class UsersService {
     }   
 
     async loginUser(loginDto: LoginDto) {
-        const { email, password } = loginDto; // throw new UniteException("All fields are required.", HttpStatus.NOT_ACCEPTABLE)
+        const { email, password } = loginDto;
         const user = await this.prisma.user.findUnique({ where: {email}});
-        if(user == null) throw new UniteException("One or more of the credentials you entered is not right.", HttpStatus.NOT_ACCEPTABLE);
+        if(user == null) throw new CredentialNotFoundException();
 
         const passHash = createHmac('sha256', user.hashSalt).update(password).digest('hex');
         const isPasswordValid = passHash === user.password;
 
-        if(!isPasswordValid) throw new UniteException("One or more of the credentials you entered is not right.", HttpStatus.NOT_ACCEPTABLE);
+        if(!isPasswordValid) throw new CredentialNotFoundException();
         
         const refToken = randomBytes(32).toString("hex");
         await this.prisma.user.update({where: {email}, data: {
@@ -49,6 +49,15 @@ export class UsersService {
         return {refToken, userId: user.id};
     }
 
+    async logout(refToken: string, userId: string) {
+        const user = await this.prisma.user.findUnique({ where: {id: userId, refreshToken: refToken} });
+        if(user == null) throw new UserNotFoundException();
+
+        await this.prisma.user.update({ where: {id: userId}, data: {
+            refreshToken: "",
+            issuedAt: Date.now()
+        }});
+    }
 
 
 }

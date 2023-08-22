@@ -3,7 +3,7 @@ import { LoginDto, RegisterDto } from './auth.dto';
 import { AuthService } from './auth.service';
 import { HttpSuccess } from 'src/utils/http.success';
 import { Request, Response } from 'express';
-import { Cookies } from 'src/decorators/cookies.dec';
+import { CookieJar } from 'src/decorators/cookies.dec';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
@@ -38,8 +38,11 @@ export class AuthController {
     // TODO: create a service both in auth and users that removes the refresh token from the db
     @HttpCode(200)
     @Post("/logout")
-    async logout(@Cookies("ref_token") refToken: string) {
-        console.log(refToken);
-        return 'logging out';
+    async logout(@CookieJar() cookieJar: {ref_token: string, user_id: string}, @Req() req: Request, @Res({passthrough: true}) res: Response) {
+        await this.authService.logout(cookieJar.ref_token, cookieJar.user_id);
+        
+        res.clearCookie('ref_token');
+        res.clearCookie('user_id');
+        res.json(HttpSuccess.createSuccess(HttpSuccess.Messages.LOGGED_OUT));
     }
 }
