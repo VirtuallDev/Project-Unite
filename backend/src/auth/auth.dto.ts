@@ -14,3 +14,14 @@ export class RegisterDto {
     @IsNotEmpty()
     password: string;
 }
+
+export class LoginDto {
+    @IsString()
+    @IsNotEmpty()
+    @IsEmail()
+    email: string;
+  
+    @IsString()
+    @IsNotEmpty()
+    password: string;
+}

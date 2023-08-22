@@ -6,5 +6,5 @@ model User {
     hashSalt     String?
     password     String
     refreshToken String?
-    issuedAt     DateTime?
+    issuedAt     BigInt?
 }

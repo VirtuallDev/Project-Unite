@@ -1,6 +1,6 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpStatus } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
-import { RegisterDto } from './auth.dto';
+import { LoginDto, RegisterDto } from './auth.dto';
 import { Prisma } from '@prisma/client';
 import { PrismaError } from 'src/utils/prisma.errors';
 import { CredentialExistsException } from 'src/users/users.exceptions';
@@ -21,6 +21,7 @@ export class AuthService {
             {
                 throw new CredentialExistsException();
             }
+
             throw new UniteException(
                 'Something went wrong, please contact our tech support.',
                 HttpStatus.INTERNAL_SERVER_ERROR,
@@ -28,5 +29,21 @@ export class AuthService {
         }
     }
 
+
+    public async login(login: LoginDto) {
+        try {
+            return await this.usersService.loginUser(login);
+        } catch (err) {
+            
+            if(!(err instanceof UniteException)) {
+                throw new UniteException(
+                    'Something went wrong, please contact our tech support.',
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                  );
+            }
+
+            throw err;
+        }
+    }
 }
                     

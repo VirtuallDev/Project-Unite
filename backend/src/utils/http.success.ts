@@ -2,7 +2,8 @@
 
 export class HttpSuccess {
     public static Messages = {
-        USER_CREATED: "User created, create a login request to authenticate."
+        USER_CREATED: "User created, create a login request to authenticate.",
+        LOGGED_IN: "Successfully created a refresh token, logging in..."
     };
 
     public static createSuccess(str: string, data?) {
