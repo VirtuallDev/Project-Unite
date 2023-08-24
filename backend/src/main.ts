@@ -8,7 +8,15 @@ import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'http://localhost:3000/',
+    origin: "*",
+    methods: ["GET,HEAD,OPTIONS,POST,PUT"],
+    allowedHeaders: [
+      "Content-Type",
+      "access-control-allow-methods",
+      "Access-Control-Allow-Origin",
+      "access-control-allow-credentials",
+      "access-control-allow-headers",
+    ],
     credentials: true,
   })
 
@@ -22,10 +30,14 @@ async function bootstrap() {
     }
   }));
 
-
-  app.use(cookieParser());
+  
   app.useGlobalFilters(new UniteExceptionFilter());
   app.getHttpAdapter().getInstance().disable("x-powered-by");
+
+  app.use(cookieParser());
+
+
   await app.listen(3000);
 }
+
 bootstrap();
