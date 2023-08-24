@@ -3,6 +3,7 @@ import './App.css'
 import useAuth, { ApiFunction } from './hooks/auth.hook'
 import { createContext } from 'react';
 import Home from './pages/home/Home';
+import Register from './pages/auth/register/Register';
 
 
 export type AuthContextType = {
@@ -20,10 +21,11 @@ function App() {
           <BrowserRouter>
           <Routes>
 
-            <Route
-              path="/"
-              element={<Home />}
-                  />
+          <Route path="/" element={<Home />}/>
+          {/* <Route path="/auth/login" element={< />}/> */}
+          <Route path="/auth/register" element={<Register />}/>
+
+
           </Routes>
           </BrowserRouter>
         </div>

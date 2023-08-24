@@ -45,4 +45,12 @@ export class AuthController {
         res.clearCookie('user_id');
         res.json(HttpSuccess.createSuccess(HttpSuccess.Messages.LOGGED_OUT));
     }
+
+    @HttpCode(200)
+    @Post("/refresh-token")
+    async refreshToken(@CookieJar() cookieJar: {ref_token: string, user_id: string}) {
+        const authToken = await this.authService.refreshToken(cookieJar.ref_token, cookieJar.user_id);
+        
+        return HttpSuccess.createSuccess(HttpSuccess.Messages.REFRESHED_TOK, {authToken});
+    }
 }

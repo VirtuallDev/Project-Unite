@@ -4,13 +4,13 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { LoginDto, UserDto } from './users.dto';
 import { ConfigService } from '@nestjs/config';
 import Generator from 'src/utils/generators';
-import { CredentialNotFoundException, UserNotFoundException } from './users.exceptions';
+import { CredentialNotFoundException, UnAuthorizedException } from './users.exceptions';
+import {decode, sign} from 'jsonwebtoken';
 
 @Injectable()
 export class UsersService {
     constructor(
-        private readonly prisma: PrismaService,
-        private readonly configService: ConfigService) {}
+        private readonly prisma: PrismaService) {}
 
     async createUser(userDto: UserDto) {
         const id = Generator.generateNonce();
@@ -51,7 +51,7 @@ export class UsersService {
 
     async logout(refToken: string, userId: string) {
         const user = await this.prisma.user.findUnique({ where: {id: userId, refreshToken: refToken} });
-        if(user == null) throw new UserNotFoundException();
+        if(user == null) throw new UnAuthorizedException();
 
         await this.prisma.user.update({ where: {id: userId}, data: {
             refreshToken: "",
@@ -59,5 +59,16 @@ export class UsersService {
         }});
     }
 
+    async refreshToken(refToken: string, userId: string) {
+        const user = await this.prisma.user.findUnique({ where: {id: userId, refreshToken: refToken} });
+        if(user == null) throw new UnAuthorizedException();
+        
+        const ct = Date.now();
+        const timePassed = (ct - Number(user.issuedAt)) / 360_000;
+        if(timePassed > 24) throw new UnAuthorizedException();
+        
+        const authToken = sign({userId}, process.env?.JWT_SECRET, {expiresIn: "30m"});
+        return authToken;
+    }
 
 }

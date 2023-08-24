@@ -20,7 +20,7 @@ function useAuth() {
     const accessToken = useSelector((s: RootState) => s.accessToken.accessToken);
     
     useEffect(() => {
-        apiRef.current =async (endpoint, method = 'GET', body?) => {
+        apiRef.current = async (endpoint, method = 'GET', body?) => {
             try {
                 const json = !(body instanceof File);
                 const headers = {
@@ -46,6 +46,7 @@ function useAuth() {
 
             if(!accessToken) return true;
             const decodedExpired = jwtDecode<{exp: number}>(accessToken)?.exp;
+
             const currentTime = Date.now() / 1000;
             return decodedExpired < currentTime;
         } catch {

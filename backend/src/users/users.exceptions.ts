@@ -14,8 +14,8 @@ export class CredentialNotFoundException extends UniteException {
     }
 }
 
-export class UserNotFoundException extends UniteException {
+export class UnAuthorizedException extends UniteException {
     constructor() {
-        super("The user you requested to identify as doesnt exist.", HttpStatus.NOT_ACCEPTABLE);
+        super("You are not logged in.", HttpStatus.UNAUTHORIZED);
     }
 }

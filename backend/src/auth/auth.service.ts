@@ -22,10 +22,7 @@ export class AuthService {
                 throw new CredentialExistsException();
             }
 
-            throw new UniteException(
-                'Something went wrong, please contact our tech support.',
-                HttpStatus.INTERNAL_SERVER_ERROR,
-              );
+            throw new UniteException();
         }
     }
 
@@ -36,10 +33,7 @@ export class AuthService {
         } catch (err) {
             
             if(!(err instanceof UniteException)) {
-                throw new UniteException(
-                    'Something went wrong, please contact our tech support.',
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                  );
+                throw new UniteException();
             }
 
             throw err;
@@ -51,10 +45,21 @@ export class AuthService {
             await this.usersService.logout(refToken, userId);
         } catch(err) {
             if(!(err instanceof UniteException)) {
-                throw new UniteException(
-                    'Something went wrong, please contact our tech support.',
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                  );
+                throw new UniteException();
+            }
+
+            throw err;
+        }
+    }
+
+    public async refreshToken(refToken: string, userId: string) {
+        try {
+            return await this.usersService.refreshToken(refToken, userId);
+        } catch (err) { 
+
+            console.log(err)
+            if(!(err instanceof UniteException)) {
+                throw new UniteException();
             }
 
             throw err;
