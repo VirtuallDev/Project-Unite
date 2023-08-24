@@ -1,0 +1,56 @@
+.input-con {
+    position: relative;
+    margin-top: 1.7em;
+}
+
+.input-con input {
+    all: unset;
+    font-size: 1em;
+    transition: all 0.3s ease-out;
+    background: none;
+    width: 100%;
+    padding-block: 8px;
+    border-radius: 5px;
+    text-indent: 10px;
+    border: 1px solid #bbbbbb;
+}
+
+.input-con label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translate(0, -50%);
+    pointer-events: none;
+    transition: all 0.3s ease-out;
+    font-size: 0.8em;
+    color: #a8a8a8;
+}
+
+.input-con input:focus {
+    border-color: var(--color-primary);
+}
+  
+.input-con input:not(:placeholder-shown) {
+    border-color: var(--color-primary);
+}
+
+.input-con:not(:focus-within) input:not(:placeholder-shown) + label {
+    border-color: var(--color-primary);
+}
+
+.input-con:focus-within label,
+.input-con input:not(:placeholder-shown) + label {
+    top: -16px;
+    font-weight: 600;
+    font-size: 0.6em;
+    
+    color: var(--color-primary);
+}
+
+.input-con input::placeholder {
+    color: transparent;
+}
+
+.input-con input:focus:not(:placeholder-shown) {
+    border-color: var(--color-primary);
+}

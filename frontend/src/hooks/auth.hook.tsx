@@ -14,6 +14,10 @@ export type BODY = JsonObject | File;
 
 export type ApiFunction = (endpoint: string | "", method?: HTTP_METHOD, body?: BODY) => Promise<unknown>;
 
+/**
+ * Custom hook to create authorized unite api calls
+ * @returns useAuth function
+ */
 function useAuth() {
     const dispatch = useDispatch<AppDispatch>();
     const apiRef = useRef<ApiFunction>(() => {throw new Error("API Function didnt initialize")});
@@ -25,7 +29,7 @@ function useAuth() {
                 const json = !(body instanceof File);
                 const headers = {
                     ...(json && {'Content-Type': 'application/json'}),
-                    authorization: 'Bearer ' + accessToken
+                    authorization: accessToken!
                 }
                 
                 const options: RequestInit = { method, headers, body: body && json ? JSON.stringify(body) : body };
@@ -41,7 +45,11 @@ function useAuth() {
         }
     }, [accessToken]);
 
-    function isTokenExpired() {
+    /**
+     * Decodes the authorization token and checks if the expiration is valid
+     * @returns {boolean} isTokenExpired
+     */
+    function isTokenExpired(): boolean {
         try {
 
             if(!accessToken) return true;
@@ -54,7 +62,10 @@ function useAuth() {
         }
     }
 
-    async function getNewAccessToken() {
+    /**
+     * Creates an API call to refresh the authorizing token
+     */
+    async function getNewAccessToken(): Promise<void> {
         try {
             const res = await fetch(`${API_URL}/auth/refresh-token`, {
                 method: 'POST',
@@ -63,21 +74,27 @@ function useAuth() {
             });
 
             const jsonRes = await res.json();
-            const newAccessToken: string = jsonRes?.accessToken;
+            const newAccessToken: string = jsonRes?.authToken;
             if(newAccessToken) dispatch(setAccessToken(newAccessToken));
         } catch {
             dispatch(setAccessToken(null));
         }
     }
 
-    
-    async function useApi(endpoint: string, method?: HTTP_METHOD, body?: BODY) {
+    /**
+     * Creates an authorized API request
+     * @param {string} endpoint 
+     * @param {HTTP_METHOD} method 
+     * @param {BODY} body 
+     * @returns { Promise<unknown>} jsonBody
+     */
+    async function useApi(endpoint: string, method?: HTTP_METHOD, body?: BODY): Promise<unknown> {
         try {
             if(isTokenExpired()) await getNewAccessToken();
             const jsonRes = await apiRef.current(endpoint, method, body);
             return jsonRes;
         } catch {
-            return;
+            return; 
         }
     }
 
