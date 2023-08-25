@@ -42,7 +42,7 @@
 }
 
 
-.register-button {
+.login-button {
     all: unset;
     display: flex;
     border: 1.5px rgb(79, 74, 148) solid;
@@ -60,12 +60,12 @@
     white-space: nowrap;
 }
   
-.register-button:hover {
+.login-button:hover {
     cursor: pointer;
     background-color: rgb(79, 74, 148);
     color: white;
 }
-.register-button:active {
+.login-button:active {
     cursor: pointer;
     background-color: rgb(60, 57, 98);
     color: white;
