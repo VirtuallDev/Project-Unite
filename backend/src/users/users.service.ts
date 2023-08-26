@@ -71,4 +71,8 @@ export class UsersService {
         return authToken;
     }
 
+    async getUser(id: string) {
+        
+    }
+
 }

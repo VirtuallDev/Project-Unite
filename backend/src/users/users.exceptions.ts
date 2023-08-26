@@ -19,3 +19,9 @@ export class UnAuthorizedException extends UniteException {
         super("You are not logged in.", HttpStatus.UNAUTHORIZED);
     }
 }
+
+export class UserNotFoundException extends UniteException {
+    constructor() {
+        super("This user cannot be found.", HttpStatus.NOT_FOUND);
+    }
+}

@@ -26,3 +26,10 @@ export class LoginDto {
     @IsNotEmpty()
     password: string;
 }
+
+export class ResponseUserDto {
+    id: string;
+    username: string;
+    email: string;
+    createdAt: string;
+}
