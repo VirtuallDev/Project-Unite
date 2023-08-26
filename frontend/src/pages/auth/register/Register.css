@@ -48,7 +48,7 @@
     border: 1.5px rgb(79, 74, 148) solid;
     background: none;
     padding: 0.8em 0;
-    margin-block-start: 1.5em;
+    margin-block-start: 8px;
     border-radius: 7px;
     font-size: 20px;
     color: rgb(79, 74, 148);
@@ -58,6 +58,15 @@
     align-items: center;
     transition: all 0.5s ease-out;
     white-space: nowrap;
+}
+
+.recaptcha {
+    width: 100%;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin-block: 8px;
 }
   
 .register-button:hover {

@@ -1,12 +1,16 @@
+
 import FormInput from '../../../components/form-input/FormInput';
 import './Register.css';
-import { useState, Fragment } from 'react';
+import { useState, Fragment, useRef } from 'react';
+import ReCAPTCHA from "react-google-recaptcha"
 
 
 
 const Register = () => {
 
     const [credentials, setCredentials] = useState({ username: "", password: "", confirmPassword: "", email: ""});
+    const captchaRef = useRef<ReCAPTCHA>(null);
+
     const inputFields = [
         {
             name: "username", 
@@ -41,7 +45,17 @@ const Register = () => {
         setCredentials(newCreds);
     }
 
+    const handleRegisterButton = async(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
+        const token = captchaRef.current?.getValue();
+        console.log(token);
+        captchaRef.current?.reset();
+
+    }
+    
+
     return (
+
         <div>
             <div className="container">
                 <div className="header">Welcome!</div>
@@ -62,9 +76,13 @@ const Register = () => {
 
                     ))}
 
-                    <button className="register-button">
+                    <div className="recaptcha">
+                        <ReCAPTCHA ref={captchaRef} className='recaptcha' sitekey="6LcnhdYnAAAAAKtDeZdiwtrw4wkj_aU6IWTsroQp" />
+                    </div>
+                    <button onClick={handleRegisterButton} className="register-button">
                         Join Us
                     </button>
+
 
                     <div className="login-con">
                         <p className="owns-account">Already have an account?</p>
