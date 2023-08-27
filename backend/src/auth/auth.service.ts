@@ -5,23 +5,24 @@ import { Prisma } from '@prisma/client';
 import { PrismaError } from 'src/utils/prisma.errors';
 import { CredentialExistsException } from 'src/users/users.exceptions';
 import UniteException from 'src/exceptions/UniteException';
+import { HttpService } from '@nestjs/axios';
 
 
 @Injectable()
 export class AuthService {
 
-    constructor(private readonly usersService: UsersService) {}
+    constructor(private readonly usersService: UsersService, private readonly httpService: HttpService) {}
 
     public async register(register: RegisterDto) {
         try {
-            await this.usersService.createUser({...register});
+            return await this.usersService.createUser({...register});
         } catch (error) {
             if(error instanceof Prisma.PrismaClientKnownRequestError &&
                 error?.code === PrismaError.UniqueConstraintFailed)
             {
                 throw new CredentialExistsException();
             }
-
+            console.log(error);
             throw new UniteException();
         }
     }
@@ -32,9 +33,8 @@ export class AuthService {
             return await this.usersService.loginUser(login);
         } catch (err) {
             
-            if(!(err instanceof UniteException)) {
+            if(!(err instanceof UniteException))
                 throw new UniteException();
-            }
 
             throw err;
         }
@@ -44,9 +44,8 @@ export class AuthService {
         try {
             await this.usersService.logout(refToken, userId);
         } catch(err) {
-            if(!(err instanceof UniteException)) {
+            if(!(err instanceof UniteException))
                 throw new UniteException();
-            }
 
             throw err;
         }
@@ -57,13 +56,14 @@ export class AuthService {
             return await this.usersService.refreshToken(refToken, userId);
         } catch (err) { 
 
-            console.log(err)
-            if(!(err instanceof UniteException)) {
+            if(!(err instanceof UniteException))
                 throw new UniteException();
-            }
+            
 
             throw err;
         }
     }
+
+
 }
                     

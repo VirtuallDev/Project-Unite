@@ -1,7 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserNotFoundException } from './users.exceptions';
-import { CookieJar } from 'src/decorators/cookies.dec';
+import { CookieJar } from 'src/decorators/cookies.decorator';
 
 @Controller('users')
 export class UsersController {

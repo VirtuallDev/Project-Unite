@@ -1,14 +1,16 @@
 
 import FormInput from '../../../components/form-input/FormInput';
+import { API_URL } from '../../../hooks/auth.hook';
 import './Register.css';
 import { useState, Fragment, useRef } from 'react';
 import ReCAPTCHA from "react-google-recaptcha"
-
+import axios from 'axios';
 
 
 const Register = () => {
 
     const [credentials, setCredentials] = useState({ username: "", password: "", confirmPassword: "", email: ""});
+    // const [errors, setErrors] = useState({ username: "", password: "", confirmPassword: "", email: ""});
     const captchaRef = useRef<ReCAPTCHA>(null);
 
     const inputFields = [
@@ -16,7 +18,7 @@ const Register = () => {
             name: "username", 
             type: "text",
             placeholder: "Username",
-            label: "Username"
+            label: "Username",
         },
         {
             name: "email", 
@@ -38,6 +40,7 @@ const Register = () => {
             label: "Confirm Password"
         },
     ]
+
     const handleDataChange = (e: React.ChangeEvent<HTMLInputElement>, cred: string) => {
         const credType = cred as "username" | "password" | "confirmPassword" | "email";
         const newCreds = {...credentials};
@@ -50,6 +53,25 @@ const Register = () => {
         const token = captchaRef.current?.getValue();
         console.log(token);
         captchaRef.current?.reset();
+        if(!token) return;
+
+        const res = await axios.post(`${API_URL}/auth/register`, {
+
+            challenge: token,
+            ...credentials
+        })
+
+        const data = res.data;
+        console.log(data);
+        if(data.error)
+        {
+        
+
+            return;
+        }
+
+        // window.location.replace("/auth/login");
+
 
     }
     
@@ -71,6 +93,7 @@ const Register = () => {
                                 placeholder={item.placeholder}
                                 name={item.name}
                                 onChange={(e) => handleDataChange(e, item.name)}
+
                             />
                         </Fragment>
 

@@ -18,7 +18,7 @@ export class UsersService {
         const passwordSalt = await Generator.generateSalt(16);
         const passHash = createHmac('sha256', passwordSalt).update(password).digest('hex');
 
-        await this.prisma.user.create({
+        const userObj = await this.prisma.user.create({
             data: {
                 id,
                 username,
@@ -28,6 +28,13 @@ export class UsersService {
                 createdAt: new Date()
             }
         })
+
+        delete userObj.hashSalt;
+        delete userObj.issuedAt;
+        delete userObj.password;
+        delete userObj.refreshToken;
+        
+        return userObj;
     }   
 
     async loginUser(loginDto: LoginDto) {

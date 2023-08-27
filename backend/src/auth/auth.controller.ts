@@ -3,7 +3,7 @@ import { LoginDto, RegisterDto } from './auth.dto';
 import { AuthService } from './auth.service';
 import { HttpSuccess } from 'src/utils/http.success';
 import { Request, Response } from 'express';
-import { CookieJar } from 'src/decorators/cookies.dec';
+import { CookieJar } from 'src/decorators/cookies.decorator';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
@@ -15,9 +15,8 @@ export class AuthController {
     @HttpCode(200)
     @Post("/register")
     async register(@Body() regData: RegisterDto) {
-        await this.authService.register(regData);
-        
-        return HttpSuccess.createSuccess(HttpSuccess.Messages.USER_CREATED);
+
+        return HttpSuccess.createSuccess(HttpSuccess.Messages.USER_CREATED,  { user: await this.authService.register(regData)});
     }
 
     @HttpCode(200)
