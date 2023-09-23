@@ -1,0 +1,11 @@
+import { useAppDispatch, useAppSelector } from '@/hooks/useAppDispatch'
+import Image from 'next/image'
+
+export default function Home() {
+  
+  return (
+    <main>
+      Hey
+    </main>
+  )
+}

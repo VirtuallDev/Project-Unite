@@ -22,7 +22,6 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({
     exceptionFactory: (errors) => {
-      console.log(errors);
       return new UniteException("Validating the given data failed. follow the next list to see why.", 400, {exceptions: errors.map(e => ({
         target: e.property,
         failures: e.constraints

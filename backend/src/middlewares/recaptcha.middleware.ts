@@ -1,6 +1,5 @@
 import { Injectable, NestMiddleware, HttpStatus } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { UsersService } from 'src/users/users.service';
 import { HttpService } from '@nestjs/axios';
 import UniteException from 'src/exceptions/UniteException';
 

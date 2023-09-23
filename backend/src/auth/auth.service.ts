@@ -22,7 +22,7 @@ export class AuthService {
             {
                 throw new CredentialExistsException();
             }
-            console.log(error);
+            
             throw new UniteException();
         }
     }
